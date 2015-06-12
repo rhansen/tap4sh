@@ -1,0 +1,205 @@
+#!/bin/sh
+
+######################################################################
+#
+# Copyright (c) 2015, Richard Hansen <rhansen@rhansen.org>
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+#   1. Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#   2. Redistributions in binary form must reproduce the above
+#      copyright notice, this list of conditions and the following
+#      disclaimer in the documentation and/or other materials provided
+#      with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+######################################################################
+
+# unit tests for tap4sh itself
+
+d=${0%/*}
+cd "${d}" || exit 1
+. ./tap4sh.sh
+
+tmpd=${0##*/}.tmp
+export tmpd
+mkdir -p "${tmpd}" || exit 1
+
+t4s_setup "$@"
+
+testcase() {
+    s=$1; shift || exit 1
+    expected_out=$1; shift || exit 1
+    expected_ret=$1; shift || exit 1
+    printf %s "${expected_out}" >${tmpd}/testcase.expected
+    sh -c '
+        . ./tap4sh.sh || exit 100
+        t4s_setup
+        eval "$1"
+        t4s_done
+    ' inner_shell "${s}" >${tmpd}/testcase.actual
+    actual_ret=$?
+    t4s_testcase "$@" '
+        [ -f "${tmpd}"/testcase.expected ] \
+            || t4s_bailout "missing expected output"
+        [ -f "${tmpd}"/testcase.actual ] \
+            || t4s_bailout "missing actual output"
+        [ "${actual_ret}" -eq "${expected_ret}" ] || {
+            t4s_log "return value differs:"
+            t4s_log "  expected: ${expected_ret}"
+            t4s_log "  actual:   ${actual_ret}"
+            exit 1
+        }
+        cmp -s "${tmpd}"/testcase.expected "${tmpd}"/testcase.actual || {
+            t4s_log "output differs:"
+            diff -u "${tmpd}"/testcase.expected "${tmpd}"/testcase.actual
+            exit 1
+        }
+    '
+}
+
+testcase '
+    t4s_testcase inner true
+' "\
+ok 1 inner
+1..1
+" 0 "expected pass"
+
+testcase '
+    t4s_testcase inner false
+' "\
+not ok 1 inner
+1..1
+" 1 "unexpected fail"
+
+testcase '
+    t4s_testcase -x msg inner false
+' "\
+not ok 1 inner # TODO msg
+1..1
+" 0 "expected fail"
+
+testcase '
+    t4s_testcase -x msg inner true
+' "\
+ok 1 inner # TODO msg
+1..1
+" 1 "unexpected pass"
+
+testcase '
+    t4s_testcase inner '\''t4s_log " foo  bar"'\''
+' "\
+#  foo  bar
+ok 1 inner
+1..1
+" 0 "log message"
+
+testcase '
+    t4s_testcase -s msg inner '\''t4s_log "should not see me"; false'\''
+' "\
+ok 1 inner # skip msg
+1..1
+" 0 "skip"
+
+testcase '
+    t4s_bailout "outer bailout msg"
+' "\
+Bail out! outer bailout msg
+" 1 "outer bailout"
+
+testcase '
+    t4s_testcase inner '\''t4s_bailout "inner bailout msg"'\''
+' "\
+Bail out! inner bailout msg
+" 1 "inner bailout"
+
+cat <<EOF >${tmpd}/subtests_script
+1..5
+# foo
+ok 1 subtest expected pass
+not ok 2 subtest unexpected fail
+not ok 3 subtest expected fail # TODO msg
+ok 4 subtest unexpected pass # TODO msg
+ok 5 subtest skip # skip msg
+EOF
+
+testcase '
+    scripted() { cat "${tmpd}"/subtests_script; }
+    t4s_subtests scripted
+' "\
+# foo
+ok 1 scripted: subtest expected pass
+not ok 2 scripted: subtest unexpected fail
+not ok 3 scripted: subtest expected fail # TODO msg
+ok 4 scripted: subtest unexpected pass # TODO msg
+ok 5 scripted: subtest skip # skip msg
+1..5
+" 1 "subtests scripted"
+
+nested='
+    nested() {
+        t4s_setup
+        t4s_testcase "subtest expected pass" true
+        t4s_testcase "subtest unexpected fail" false
+        t4s_testcase -x msg "subtest expected fail" false
+        t4s_testcase -x msg "subtest unexpected pass" true
+        t4s_testcase -s msg "subtest skip" true
+        t4s_done
+    }
+'
+
+testcase '
+    '"${nested}"'
+    t4s_subtests nested
+' "\
+ok 1 nested: subtest expected pass
+not ok 2 nested: subtest unexpected fail
+not ok 3 nested: subtest expected fail # TODO msg
+ok 4 nested: subtest unexpected pass # TODO msg
+ok 5 nested: subtest skip # skip msg
+1..5
+" 1 "subtests nested"
+
+testcase '
+    scripted() { cat "${tmpd}"/subtests_script; }
+    '"${nested}"'
+    scripted_and_nested() {
+        t4s_setup
+        t4s_subtests scripted
+        t4s_subtests nested
+        t4s_done
+    }
+    t4s_subtests scripted_and_nested
+' "\
+# foo
+ok 1 scripted_and_nested: scripted: subtest expected pass
+not ok 2 scripted_and_nested: scripted: subtest unexpected fail
+not ok 3 scripted_and_nested: scripted: subtest expected fail # TODO msg
+ok 4 scripted_and_nested: scripted: subtest unexpected pass # TODO msg
+ok 5 scripted_and_nested: scripted: subtest skip # skip msg
+ok 6 scripted_and_nested: nested: subtest expected pass
+not ok 7 scripted_and_nested: nested: subtest unexpected fail
+not ok 8 scripted_and_nested: nested: subtest expected fail # TODO msg
+ok 9 scripted_and_nested: nested: subtest unexpected pass # TODO msg
+ok 10 scripted_and_nested: nested: subtest skip # skip msg
+1..10
+" 1 "subtests scripted and nested"
+
+t4s_done
