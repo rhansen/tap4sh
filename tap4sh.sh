@@ -149,14 +149,14 @@ EOF
 
 ## useful logging/error handling/string handling functions
 
-t4s_log() { printf %s\\n "$*"; }
+t4s_pecho() { printf %s\\n "$*"; }
+t4s_log() { t4s_pecho "$@"; }
 t4s_debug() { : t4s_log "DEBUG: $@" >&2; }
 t4s_warn() { t4s_log "WARNING: $@" >&2; }
 t4s_error() { t4s_log "ERROR: $@" >&2; }
 t4s_fatal() { t4s_error "$@"; exit 1; }
 t4s_usage_fatal() { t4s_error "$@"; t4s_usage >&2; exit 1; }
 t4s_try() { "$@" || t4s_fatal "'$@' failed"; }
-t4s_pecho() { printf %s\\n "$*"; }
 t4s_esc() {
     t4s_esc_sep=
     for t4s_esc_x in "$@"; do
