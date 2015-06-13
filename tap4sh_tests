@@ -202,4 +202,14 @@ ok 10 scripted_and_nested: nested: subtest skip # skip msg
 1..10
 " 1 "subtests scripted and nested"
 
+testcase '
+    t4s_log "outside testcase"
+    t4s_testcase inner '\''t4s_log "inside testcase"'\''
+' "\
+# outside testcase
+# inside testcase
+ok 1 inner
+1..1
+" 0 "t4s_log() prefixes lines properly"
+
 t4s_done

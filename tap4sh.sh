@@ -132,6 +132,9 @@
 # Release history:
 #
 #   (unreleased)
+#     * t4s_log() now prefixes each line with '# ' when not in a
+#       testcase (t4s_testcase() already prefixes lines written to
+#       stdout with '# ')
 #
 #   v1.0, released 2015-06-12:
 #     * initial release
@@ -150,10 +153,14 @@ EOF
 ## useful logging/error handling/string handling functions
 
 t4s_pecho() { printf %s\\n "$*"; }
-t4s_log() { t4s_pecho "$@"; }
-t4s_debug() { : t4s_log "DEBUG: $@" >&2; }
-t4s_warn() { t4s_log "WARNING: $@" >&2; }
-t4s_error() { t4s_log "ERROR: $@" >&2; }
+t4s_log() {
+    t4s_log_pfx=
+    [ -n "${t4s_in_test_script+set}" ] || t4s_log_pfx="# "
+    t4s_pecho "${t4s_log_pfx}$@"
+}
+t4s_debug() { : t4s_pecho "DEBUG: $@" >&2; }
+t4s_warn() { t4s_pecho "WARNING: $@" >&2; }
+t4s_error() { t4s_pecho "ERROR: $@" >&2; }
 t4s_fatal() { t4s_error "$@"; exit 1; }
 t4s_usage_fatal() { t4s_error "$@"; t4s_usage >&2; exit 1; }
 t4s_try() { "$@" || t4s_fatal "'$@' failed"; }
