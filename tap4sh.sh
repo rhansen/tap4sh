@@ -34,6 +34,8 @@
 #
 # Test Anything Protocol library for POSIX shells
 #
+# https://github.com/richardhansen/tap4sh
+#
 # Features:
 #
 #   * Test Anything Protocol v12 output
