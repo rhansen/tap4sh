@@ -288,4 +288,12 @@ ok 39 needs prereq1 and prereq7
 1..39
 " 1 "prerequisite/requirement support via --gives, --needs"
 
+testcase '
+    t4s_give foo
+    t4s_testcase --needs foo "needs foo" true
+' "\
+ok 1 needs foo
+1..1
+" 0 "t4s_give() works"
+
 t4s_done

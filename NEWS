@@ -1,4 +1,5 @@
 (unreleased)
+  * add t4s_give() for marking a prerequisite as satisfied
 
 v1.1, released 2015-06-14
   * t4s_log() now prefixes each line with '# ' when not in a

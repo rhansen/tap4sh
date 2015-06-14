@@ -30,9 +30,9 @@ https://github.com/richardhansen/tap4sh
     programs or shell functions.  Their results are merged into the
     script's test output stream.  Each subtest test description is
     prefixed with a (user-settable) string.
-  * Tests can be configured to depend on each other:  If a
-    dependency fails, then the dependant test is automatically
-    skipped.
+  * Tests can be configured to depend on other tests or user-supplied
+    prerequisites:  If a dependency is not met, then any dependent
+    tests are automatically skipped.
 
 ## Caveats
 
@@ -57,6 +57,9 @@ See each function's definition for usage details.
   * `t4s_bailout()`:  Abort the test script
   * `t4s_testcase()`:  Run a script as a test case and output the
     results in TAP format
+  * `t4s_give()`:  Mark the named prerequisite(s) as having being met
+    so that any testcase that uses `--needs` with the named
+    prerequisite won't be skipped
   * `t4s_subtests()`:  Run a command that performs its own tests and
     integrate the results
 

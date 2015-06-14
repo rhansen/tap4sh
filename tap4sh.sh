@@ -157,6 +157,13 @@ t4s_bailout() {
     exit 1
 }
 
+# mark each of the named options as having been met
+t4s_give() {
+    for t4s_option in "$@"; do
+        eval "t4s_opt_${t4s_option}=true"
+    done
+}
+
 # run a test case and output the results in TAP format
 #
 # see t4s_usage() definition below
