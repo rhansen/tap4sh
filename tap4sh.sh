@@ -97,6 +97,8 @@
 #
 # Release history:
 #
+#   (unreleased)
+#
 #   v1.0, released 2015-06-12:
 #     * initial release
 
