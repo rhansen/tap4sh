@@ -10,9 +10,10 @@ https://github.com/richardhansen/tap4sh
   * [Test Anything Protocol
     v12](http://testanything.org/tap-specification.html) output
   * Conforms to [POSIX Issue 7
-    TC2](http://pubs.opengroup.org/onlinepubs/9699919799/), so it
+    TC1](http://pubs.opengroup.org/onlinepubs/9699919799/), so it
     should work with many shell implementations (bash, zsh, dash, ash,
     etc.) and associated utilities.
+  * BSD 2-clause license
   * Available testcase types:
       - expected pass:  The usual pass case.
       - unexpected fail:  The usual fail case.
@@ -37,6 +38,7 @@ https://github.com/richardhansen/tap4sh
 
   * All function and variable names beginning with `t4s_` are reserved
     by this library.
+  * `t4s_setup()` sets traps on `HUP`, `INT`, `TERM`, and `EXIT`
 
 ## TODO
 
@@ -81,19 +83,17 @@ d=${0%/*}
 
 t4s_setup "$@"
 
-t4s_testcase "setup" '
-    create_database
-'
+create_database || t4s_bailout "failed to prepare for tests"
 
 t4s_testcase "basic addition" '
     [ $((1+1)) -eq 2 ]
 '
 
-t4s_testcase --xfail "waiting for mad scientist" "pigs fly" '
+t4s_testcase --xfail "waiting on mad scientist" --gives pigs_fly "pigs fly" '
     check_pigs_fly
 '
 
-t4s_testcase --skip "pigs don't yet fly" "pigs carry > 20lbs" '
+t4s_testcase --needs pigs_fly "pigs carry > 20lbs" '
     launch_pig --weight 20lbs
 '
 
@@ -107,4 +107,15 @@ my_subtests() {
 t4s_subtests my_subtests
 
 t4s_done
+```
+
+The output of the above might look like this:
+
+```
+ok 1 basic addition
+not ok 2 pigs fly # TODO waiting on mad scientist
+ok 3 pigs carry > 20lbs # skip unsatisfied requirement: pigs_fly
+ok 4 my_subtests: true returns 0
+ok 5 my_subtests: false returns non-zero
+1..5
 ```
