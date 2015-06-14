@@ -134,7 +134,7 @@
 #
 # Release history:
 #
-#   (unreleased)
+#   v1.1, released 2015-06-14
 #     * t4s_log() now prefixes each line with '# ' when not in a
 #       testcase (t4s_testcase() already prefixes lines written to
 #       stdout with '# ')
