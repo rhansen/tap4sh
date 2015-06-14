@@ -55,6 +55,9 @@
 #     programs or shell functions.  Their results are merged into the
 #     script's test output stream.  Each subtest test description is
 #     prefixed with a (user-settable) string.
+#   * Tests can be configured to depend on each other:  If a
+#     dependency fails, then the dependant test is automatically
+#     skipped.
 #
 # Caveats:
 #
@@ -137,6 +140,9 @@
 #       stdout with '# ')
 #     * t4s_log() now reads stdin for lines to log if not given any
 #       arguments
+#     * t4s_testcase() now supports prerequisites for automatically
+#       skipping tests if certain previous tests failed (via the new
+#       --needs and --gives arguments)
 #
 #   v1.0, released 2015-06-12:
 #     * initial release
@@ -303,6 +309,17 @@ Options:
   -p, --pass
     Expect <test-script> to pass.  This is the default.
 
+  -n <required-options>, --needs=<required-options>
+    Skip this test if any of the options in the space-separated list
+    have not been met.  The name of each option must be suitable as a
+    shell variable name.  The default is the empty list.
+
+  -g <provided-options>, --gives=<provided-options>
+    If this test passes (expected or unexpected), mark each option in
+    the space-separted list as having been met.  The name of each
+    option must be suitable as a shell variable name.  The default is
+    the empty list.
+
   --
     End of options.  Useful if <description> begins with '-'.
 
@@ -315,6 +332,9 @@ EOF
         }
 
         type=pass
+        unset t4s_needs
+        unset t4s_gives
+        unset t4s_skipmsg
         while [ "$#" -gt 0 ]; do
             arg=$1
             case $1 in
@@ -323,6 +343,8 @@ EOF
                 -s|--skip) type=skip; shift; t4s_skipmsg=$1;;
                 -x|--xfail) type=xfail; shift; t4s_todomsg=$1;;
                 -p|--pass) type=pass;;
+                -n|--needs) shift; t4s_needs=$1;;
+                -g|--gives) shift; t4s_gives=$1;;
                 --) shift; break;;
                 -*) t4s_usage_fatal "unknown option: '$1'";;
                 *) break;;
@@ -332,6 +354,14 @@ EOF
         desc=$1; shift || t4s_usage_fatal "no description provided"
         script=$1; shift || t4s_usage_fatal "no test script provided"
         [ "$#" -eq 0 ] || t4s_usage_fatal "unknown argument: $1"
+
+        for t4s_need in ${t4s_needs}; do
+            eval "[ -n \"\${t4s_opt_${t4s_need}+set}\" ]" || {
+                type=skip
+                : "${t4s_skipmsg=unsatisfied requirement: ${t4s_need}}"
+                break
+            }
+        done
 
         if [ "${type}" = skip ]; then
             t4s_pecho "ok ${t4s_testnum} ${desc} # skip ${t4s_skipmsg}"
@@ -367,6 +397,13 @@ EOF
             status="not ok"
             ret=1
         }
+
+        if [ "${ret}" -eq 0 ]; then
+            for t4s_give in ${t4s_gives}; do
+                t4s_pecho "t4s_opt_${t4s_give}=true" >&4
+            done
+        fi
+
         [ "${type}" != xfail ] || ret=$((1-ret))
 
         t4s_pecho "t4s_testcase_ret=${ret}" >&4

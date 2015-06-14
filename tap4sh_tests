@@ -226,4 +226,66 @@ ok 1 inner
 1..1
 " 0 "t4s_log() reads from stdin with no arguments"
 
+testcase '
+    t4s_testcase -g prereq1 "prereq1 xpass" true
+    t4s_testcase -g prereq2 "prereq2 unxfail" false
+    t4s_testcase -g prereq3 -x msg "prereq3 xfail" false
+    t4s_testcase -g prereq4 -x msg "prereq4 unxpass" true
+    t4s_testcase -g prereq5 -s msg "prereq5 skipped" true
+    t4s_testcase -n prereq1 -g prereq6 "prereq6 (for chaining)" true
+
+    for x in 1 2 3 4 5 6; do
+        t4s_testcase -n prereq${x} "needs prereq${x} xpass" true
+        t4s_testcase -n prereq${x} "needs prereq${x} unxfail" false
+        t4s_testcase -n prereq${x} -x msg "needs prereq${x} xfail" false
+        t4s_testcase -n prereq${x} -x msg "needs prereq${x} unxpass" true
+        t4s_testcase -n prereq${x} -s msg "needs prereq${x} skipped" true
+    done
+
+    t4s_testcase -g prereq7 "prereq7 additional xpass" true
+    t4s_testcase -n "prereq1 prereq2" "needs prereq1 and prereq2" true
+    t4s_testcase -n "prereq1 prereq7" "needs prereq1 and prereq7" true
+' "\
+ok 1 prereq1 xpass
+not ok 2 prereq2 unxfail
+not ok 3 prereq3 xfail # TODO msg
+ok 4 prereq4 unxpass # TODO msg
+ok 5 prereq5 skipped # skip msg
+ok 6 prereq6 (for chaining)
+ok 7 needs prereq1 xpass
+not ok 8 needs prereq1 unxfail
+not ok 9 needs prereq1 xfail # TODO msg
+ok 10 needs prereq1 unxpass # TODO msg
+ok 11 needs prereq1 skipped # skip msg
+ok 12 needs prereq2 xpass # skip unsatisfied requirement: prereq2
+ok 13 needs prereq2 unxfail # skip unsatisfied requirement: prereq2
+ok 14 needs prereq2 xfail # skip unsatisfied requirement: prereq2
+ok 15 needs prereq2 unxpass # skip unsatisfied requirement: prereq2
+ok 16 needs prereq2 skipped # skip msg
+ok 17 needs prereq3 xpass # skip unsatisfied requirement: prereq3
+ok 18 needs prereq3 unxfail # skip unsatisfied requirement: prereq3
+ok 19 needs prereq3 xfail # skip unsatisfied requirement: prereq3
+ok 20 needs prereq3 unxpass # skip unsatisfied requirement: prereq3
+ok 21 needs prereq3 skipped # skip msg
+ok 22 needs prereq4 xpass
+not ok 23 needs prereq4 unxfail
+not ok 24 needs prereq4 xfail # TODO msg
+ok 25 needs prereq4 unxpass # TODO msg
+ok 26 needs prereq4 skipped # skip msg
+ok 27 needs prereq5 xpass # skip unsatisfied requirement: prereq5
+ok 28 needs prereq5 unxfail # skip unsatisfied requirement: prereq5
+ok 29 needs prereq5 xfail # skip unsatisfied requirement: prereq5
+ok 30 needs prereq5 unxpass # skip unsatisfied requirement: prereq5
+ok 31 needs prereq5 skipped # skip msg
+ok 32 needs prereq6 xpass
+not ok 33 needs prereq6 unxfail
+not ok 34 needs prereq6 xfail # TODO msg
+ok 35 needs prereq6 unxpass # TODO msg
+ok 36 needs prereq6 skipped # skip msg
+ok 37 prereq7 additional xpass
+ok 38 needs prereq1 and prereq2 # skip unsatisfied requirement: prereq2
+ok 39 needs prereq1 and prereq7
+1..39
+" 1 "prerequisite/requirement support via --gives, --needs"
+
 t4s_done
