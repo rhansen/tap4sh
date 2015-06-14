@@ -33,6 +33,40 @@
 # tap4sh.sh: library of useful Test Anything Protocol functions for
 # POSIX shells
 #
+# Features:
+#
+#   * Test Anything Protocol v12 output
+#   * Conforms to POSIX Issue 7 TC2, so it should work with many shell
+#     implementations (bash, zsh, dash, ash, etc.) and associated
+#     utilities.
+#   * Available testcase types:
+#       - expected pass:  The usual pass case.
+#       - unexpected fail:  The usual fail case.
+#       - expected fail:  When something is known to be broken (e.g.,
+#         add a known-to-fail testcase before fixing a bug).
+#       - unexpected pass:  When something is known to be broken, but
+#         for some reason the test is passing.  (This usually happens
+#         immediately after fixing a bug but before the test case has
+#         been changed to 'expected pass'.)
+#       - skip:  A prerequisite is unavailable so the test isn't even
+#         performed (e.g., Valgrind isn't installed so skip memory
+#         leak tests).
+#   * The t4s_subtests() function can be used to drive other TAP v12
+#     programs or shell functions.  Their results are merged into the
+#     script's test output stream.  Each subtest test description is
+#     prefixed with a (user-settable) string.
+#
+# Caveats:
+#
+#   * All function and variable names beginning with 't4s_' are
+#     reserved by this library.
+#
+# TODO:
+#
+#   * prefix all variables in t4s_testcase() and t4s_subtests() with
+#     't4s_' to avoid collisions (user might set var/fn outside
+#     testcase and expect it to be usable it inside testcase)
+#
 # Available functions (see their definitions for usage details):
 #
 #   Testing functions:
