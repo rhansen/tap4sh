@@ -320,8 +320,8 @@ EOF
             case $1 in
                 --*'='*) shift; set -- "${arg%%=*}" "${arg#*=}" "$@"; continue;;
                 -h|--help) t4s_usage; exit 0;;
-                -s|--skip) type=skip; shift; msg=$1;;
-                -x|--xfail) type=xfail; shift; msg=$1;;
+                -s|--skip) type=skip; shift; t4s_skipmsg=$1;;
+                -x|--xfail) type=xfail; shift; t4s_todomsg=$1;;
                 -p|--pass) type=pass;;
                 --) shift; break;;
                 -*) t4s_usage_fatal "unknown option: '$1'";;
@@ -334,14 +334,14 @@ EOF
         [ "$#" -eq 0 ] || t4s_usage_fatal "unknown argument: $1"
 
         if [ "${type}" = skip ]; then
-            t4s_pecho "ok ${t4s_testnum} ${desc} # skip ${msg}"
+            t4s_pecho "ok ${t4s_testnum} ${desc} # skip ${t4s_skipmsg}"
             exit 0
         fi
 
         status=ok
         ret=0
         line="${t4s_testnum} ${desc}"
-        [ "${type}" != xfail ] || line=${line}" # TODO ${msg}"
+        [ "${type}" != xfail ] || line=${line}" # TODO ${t4s_todomsg}"
 
         bailout=$(
             exec 4>&1 1>&3
