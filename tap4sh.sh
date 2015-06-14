@@ -30,8 +30,9 @@
 #
 ######################################################################
 
-# tap4sh.sh: library of useful Test Anything Protocol functions for
-# POSIX shells
+# tap4sh.sh v1.1
+#
+# Test Anything Protocol library for POSIX shells
 #
 # Features:
 #
@@ -131,23 +132,6 @@
 #     t4s_subtests my_subtests
 #
 #     t4s_done
-#
-# Release history:
-#
-#   (unreleased)
-#
-#   v1.1, released 2015-06-14
-#     * t4s_log() now prefixes each line with '# ' when not in a
-#       testcase (t4s_testcase() already prefixes lines written to
-#       stdout with '# ')
-#     * t4s_log() now reads stdin for lines to log if not given any
-#       arguments
-#     * t4s_testcase() now supports prerequisites for automatically
-#       skipping tests if certain previous tests failed (via the new
-#       --needs and --gives arguments)
-#
-#   v1.0, released 2015-06-12:
-#     * initial release
 
 t4s_usage() {
     cat <<EOF
