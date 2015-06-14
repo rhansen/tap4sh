@@ -30,7 +30,7 @@
 #
 ######################################################################
 
-# tap4sh.sh v1.1
+# tap4sh.sh v1.2
 #
 # Test Anything Protocol library for POSIX shells
 #
