@@ -212,4 +212,18 @@ ok 1 inner
 1..1
 " 0 "t4s_log() prefixes lines properly"
 
+testcase '
+    printf "outside #1\\noutside #2\\n" | t4s_log
+    t4s_testcase inner '\''
+        printf "inside #1\\ninside #2\\n" | t4s_log
+    '\''
+' "\
+# outside #1
+# outside #2
+# inside #1
+# inside #2
+ok 1 inner
+1..1
+" 0 "t4s_log() reads from stdin with no arguments"
+
 t4s_done

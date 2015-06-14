@@ -135,6 +135,8 @@
 #     * t4s_log() now prefixes each line with '# ' when not in a
 #       testcase (t4s_testcase() already prefixes lines written to
 #       stdout with '# ')
+#     * t4s_log() now reads stdin for lines to log if not given any
+#       arguments
 #
 #   v1.0, released 2015-06-12:
 #     * initial release
@@ -156,7 +158,13 @@ t4s_pecho() { printf %s\\n "$*"; }
 t4s_log() {
     t4s_log_pfx=
     [ -n "${t4s_in_test_script+set}" ] || t4s_log_pfx="# "
-    t4s_pecho "${t4s_log_pfx}$@"
+    if [ "$#" -gt 0 ]; then
+        t4s_pecho "${t4s_log_pfx}$@"
+    else
+        while IFS= read -r t4s_log_line; do
+            t4s_pecho "${t4s_log_pfx}${t4s_log_line}"
+        done
+    fi
 }
 t4s_debug() { : t4s_pecho "DEBUG: $@" >&2; }
 t4s_warn() { t4s_pecho "WARNING: $@" >&2; }
