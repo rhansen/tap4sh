@@ -33,6 +33,11 @@ https://github.com/richardhansen/tap4sh
   * Tests can be configured to depend on other tests or user-supplied
     prerequisites:  If a dependency is not met, then any dependent
     tests are automatically skipped.
+  * If a test script writes to standard error (stderr), the output is
+    passed through to stderr unmodified.
+  * If a test script writes to standard output (stdout), each line of
+    the output is prefixed with `# ` to convert it to a TAP diagnostic
+    line and then output to stdout.
 
 ## Caveats
 
