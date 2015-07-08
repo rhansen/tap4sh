@@ -21,7 +21,7 @@ https://github.com/richardhansen/tap4sh
         add a known-to-fail testcase before fixing a bug).
       - unexpected pass:  When something is known to be broken, but
         for some reason the test is passing.  (This usually happens
-        immediately after fixing a bug but before the test case has
+        immediately after fixing a bug but before the testcase has
         been changed to 'expected pass'.)
       - skip:  A prerequisite is unavailable so the test isn't even
         performed (e.g., Valgrind isn't installed so skip memory leak
@@ -44,7 +44,7 @@ https://github.com/richardhansen/tap4sh
 
   * prefix all variables in `t4s_testcase()` and `t4s_subtests()` with
     `t4s_` to avoid collisions (user might set var/fn outside testcase
-    and expect it to be usable it inside testcase)
+    and expect it to be usable inside a testcase)
 
 ## Available Functions
 
@@ -52,10 +52,10 @@ See each function's definition for usage details.
 
 ### Testing Functions
 
-  * `t4s_setup()`:  Prepare to run test cases (required)
+  * `t4s_setup()`:  Prepare to run testcases (required)
   * `t4s_done()`:  No more tests (required)
   * `t4s_bailout()`:  Abort the test script
-  * `t4s_testcase()`:  Run a script as a test case and output the
+  * `t4s_testcase()`:  Run a script as a testcase and output the
     results in TAP format
   * `t4s_give()`:  Mark the named prerequisite(s) as having being met
     so that any testcase that uses `--needs` with the named
@@ -103,7 +103,7 @@ t4s_testcase --needs pigs_fly "pigs carry > 20lbs" '
 my_subtests() {
     t4s_setup "$@"
     t4s_testcase "true returns 0" 'true'
-    t4s_testcase "false returns non-zero" '!false"
+    t4s_testcase "false returns non-zero" '!false'
     t4s_done
 }
 
