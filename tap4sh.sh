@@ -549,7 +549,7 @@ EOF
         testnum_offset=${t4s_testnum}
         {
             unset t4s_setup_done
-            "$@"
+            ("$@")
         } | {
             unset plan
             firstline=true

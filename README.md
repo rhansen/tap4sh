@@ -41,6 +41,9 @@ https://github.com/richardhansen/tap4sh
 
 ## Caveats
 
+  * Testcases and subtests are run in a subshell, so any changes to
+    variables, file descriptors, traps, etc. are lost when the
+    testcase or subtest completes.
   * All function and variable names beginning with `t4s_` are reserved
     by this library.
   * `t4s_setup()` sets traps on `HUP`, `INT`, `TERM`, and `EXIT`

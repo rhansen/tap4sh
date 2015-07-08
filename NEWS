@@ -1,4 +1,6 @@
 (unreleased)
+  * run subtests in a subshell to prevent them from interfering with
+    the test environment
 
 v1.2, released 2015-06-14
   * add t4s_give() for marking a prerequisite as satisfied
