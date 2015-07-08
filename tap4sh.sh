@@ -149,7 +149,7 @@ t4s_bailout() {
     t4s_debug "t4s_bailout $@"
     if [ -n "${t4s_in_test_script+set}" ]; then
         t4s_debug "  in test script"
-        t4s_pecho "$@" >&4
+        t4s_pecho "$@" >&9
     else
         t4s_debug "  not in test script"
         t4s_bailout_msg="$*"
@@ -270,13 +270,13 @@ EOF
         [ "${type}" != xfail ] || line=${line}" # TODO ${t4s_todomsg}"
 
         bailout=$(
-            exec 4>&1 1>&3
+            exec 9>&1 1>&3
             t4s_in_test_script=true
             ret=$(
-                exec 5>&1 1>&3
+                exec 4>&1 1>&3
                 {
                     (eval "${script}")
-                    t4s_pecho "$?" >&5
+                    t4s_pecho "$?" >&4
                 } | while IFS= read -r line; do
                     t4s_pecho "# ${line}"
                 done
