@@ -47,6 +47,10 @@ https://github.com/richardhansen/tap4sh
   * All function and variable names beginning with `t4s_` are reserved
     by this library.
   * `t4s_setup()` sets traps on `HUP`, `INT`, `TERM`, and `EXIT`
+  * `t4s_testcase()` and `t4s_subtests()` open file descriptor 3 for
+    internal purposes.  Testcases and subtests should feel free to use
+    this descriptor if desired (it is closed before running testcases
+    and subtests).
   * Testcases must not write to or close file descriptor 9 as it is
     used to communicate a bailout message (see `t4s_bailout()`).
 

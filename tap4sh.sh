@@ -275,7 +275,7 @@ EOF
             ret=$(
                 exec 4>&1 1>&3
                 {
-                    (eval "${script}")
+                    (eval "${script}") 3>&- 4>&-
                     t4s_pecho "$?" >&4
                 } | while IFS= read -r line; do
                     t4s_pecho "# ${line}"
@@ -549,7 +549,7 @@ EOF
         testnum_offset=${t4s_testnum}
         {
             unset t4s_setup_done
-            ("$@")
+            ("$@") 3>&- 4>&-
         } | {
             unset plan
             firstline=true
