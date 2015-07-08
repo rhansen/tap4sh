@@ -53,6 +53,9 @@ https://github.com/richardhansen/tap4sh
     and subtests).
   * Testcases must not write to or close file descriptor 9 as it is
     used to communicate a bailout message (see `t4s_bailout()`).
+  * Standard output (stdout) is redirected in testcases and subtests,
+    so any tests that require a terminal must provide their own
+    pseudoterminal (pty).
 
 ## TODO
 
