@@ -30,11 +30,13 @@
 #
 ######################################################################
 
-# tap4sh.sh v1.3
-#
 # Test Anything Protocol library for POSIX shells
 #
 # https://github.com/rhansen/tap4sh
+
+t4s_version_major=1
+t4s_version_minor=3
+t4s_version=${t4s_version_major}.${t4s_version_minor}
 
 t4s_usage() {
     cat <<EOF

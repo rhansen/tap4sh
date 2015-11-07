@@ -7,6 +7,8 @@ v1.3, not yet released
     subtests to prevent tests from interfering with the test
     environment
   * permit positional arguments for the testcase script
+  * the tap4sh version is now available in the t4s_version,
+    t4s_version_major, and t4s_version_minor variables
 
 v1.2, released 2015-06-14
   * add t4s_give() for marking a prerequisite as satisfied
