@@ -224,6 +224,9 @@ Options:
 
   <test-script>
     Test code to run in a subshell via 'eval'.
+
+  [<arg>...]
+    Positional arguments for <test-script>.
 EOF
         }
 
@@ -249,7 +252,6 @@ EOF
         done
         desc=$1; shift || t4s_usage_fatal "no description provided"
         script=$1; shift || t4s_usage_fatal "no test script provided"
-        [ "$#" -eq 0 ] || t4s_usage_fatal "unknown argument: $1"
 
         for t4s_need in ${t4s_needs}; do
             eval "[ -n \"\${t4s_opt_${t4s_need}+set}\" ]" || {

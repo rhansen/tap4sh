@@ -296,4 +296,13 @@ ok 1 needs foo
 1..1
 " 0 "t4s_give() works"
 
+testcase '
+    t4s_testcase inner '\''
+        test x"$1" = xfoo
+    '\'' foo
+' "\
+ok 1 inner
+1..1
+" 0 "script arguments work"
+
 t4s_done
