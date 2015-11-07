@@ -34,7 +34,7 @@
 #
 # Test Anything Protocol library for POSIX shells
 #
-# https://github.com/richardhansen/tap4sh
+# https://github.com/rhansen/tap4sh
 
 t4s_usage() {
     cat <<EOF

@@ -3,7 +3,7 @@
 [Test Anything Protocol](https://testanything.org/) library for POSIX
 shells
 
-https://github.com/richardhansen/tap4sh
+https://github.com/rhansen/tap4sh
 
 [![Build Status](https://travis-ci.org/rhansen/tap4sh.svg?branch=master)](https://travis-ci.org/rhansen/tap4sh)
 
