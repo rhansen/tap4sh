@@ -5,6 +5,8 @@ shells
 
 https://github.com/richardhansen/tap4sh
 
+[![Build Status](https://travis-ci.org/rhansen/tap4sh.svg?branch=master)](https://travis-ci.org/rhansen/tap4sh)
+
 ## Features
 
   * [Test Anything Protocol
