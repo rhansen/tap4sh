@@ -185,7 +185,7 @@ t4s_testcase() {
 
         t4s_usage() {
             cat<<EOF
-Usage: dotest [options] [--] <description> <test-script>
+Usage: t4s_testcase [options] [--] <description> <test-script> [<arg>...]
 
 Run <test-script> in a subshell via 'eval'.  If the script returns
 non-zero, report it as a failure, otherwise a pass.
