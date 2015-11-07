@@ -1,3 +1,5 @@
+v1.4, not yet released
+
 v1.3, released 2015-11-07
   * run subtests in a subshell to prevent them from interfering with
     the test environment
