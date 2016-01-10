@@ -543,6 +543,8 @@ EOF
             esac
             shift || t4s_usage_fatal "unknown option: '$1'"
         done
+        command -v "$1" >/dev/null 2>&1 \
+            || t4s_fatal "command not found: $1"
 
         t4s_debug "running t4s_subtests: $@"
         t4s_subtests_bailout() {
