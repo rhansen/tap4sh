@@ -104,7 +104,7 @@ t4s_finalize() {
         t4s_pecho "1..${t4s_testnum}"
     elif [ -n "${t4s_do_bailout+set}" ]; then
         if [ -n "${t4s_bailout_msg+set}" ]; then
-            t4s_pecho "Bail out! ${t4s_bailout_msg}"
+            t4s_pecho "Bail out!${t4s_bailout_msg:+ ${t4s_bailout_msg}}"
         else
             t4s_pecho "Bail out! (${t4s_exit_reason-unexpected early exit})"
         fi
@@ -292,9 +292,18 @@ EOF
                     t4s_pecho "# ${line}"
                 done
             )
+            # print 'x' to be removed later.  this has the effect of
+            # preserving any trailing newlines in the bailout message.
+            # preserving trailing newlines makes it possible to
+            # distinguish between no bailout message and an empty
+            # bailout message.
+            t4s_pecho x >&9
             exit "${ret}"
         ) || {
+            bailout=${bailout%x}
             [ -z "${bailout}" ] || {
+                # strip trailing newlines
+                bailout=$(t4s_pecho "${bailout}")
                 t4s_debug "bailout=${bailout}"
                 bailout_esc=$(t4s_esc "${bailout}")
                 t4s_debug "bailout_esc=${bailout_esc}"

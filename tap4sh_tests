@@ -129,13 +129,25 @@ testcase '
     t4s_bailout "outer bailout msg"
 ' "\
 Bail out! outer bailout msg
-" 1 "outer bailout"
+" 1 "outer bailout with message"
+
+testcase '
+    t4s_bailout
+' "\
+Bail out!
+" 1 "outer bailout no message"
 
 testcase '
     t4s_testcase inner '\''t4s_bailout "inner bailout msg"'\''
 ' "\
 Bail out! inner bailout msg
-" 1 "inner bailout"
+" 1 "inner bailout with message"
+
+testcase '
+    t4s_testcase inner t4s_bailout
+' "\
+Bail out!
+" 1 "inner bailout no message"
 
 testcase '
     exit 0

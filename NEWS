@@ -1,4 +1,5 @@
 v1.4, not yet released
+  * support empty bailout messages
   * if the script exits unexpectedly, log the reason for the exit in
     the bailout message ("unexpected early exit" or signal name)
   * fix t4s_esc() to properly escape arguments with trailing newlines
