@@ -75,6 +75,13 @@ testcase() {
     '
 }
 
+t4s_testcase "t4s_esc() handles trailing newlines" '
+    newline="
+"
+    esc=$(t4s_esc "${newline}")
+    [ "$(eval "printf %s\\\\n a${esc}b")" = a"${newline}"b ]
+'
+
 testcase '
     t4s_testcase inner true
 ' "\

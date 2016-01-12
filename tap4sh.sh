@@ -73,8 +73,8 @@ t4s_esc() {
     t4s_esc_sep=
     for t4s_esc_x in "$@"; do
         t4s_esc_x_esc=$(
-            t4s_pecho "${t4s_esc_x}" | sed -e "s/'/'\\\\''/g")
-        printf %s "${t4s_esc_sep}'${t4s_esc_x_esc}'"
+            t4s_pecho "${t4s_esc_x}x" | sed -e "s/'/'\\\\''/g")
+        printf %s "${t4s_esc_sep}'${t4s_esc_x_esc%x}'"
         t4s_esc_sep=' '
     done
     printf \\n

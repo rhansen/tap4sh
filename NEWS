@@ -1,4 +1,5 @@
 v1.4, not yet released
+  * fix t4s_esc() to properly escape arguments with trailing newlines
   * print "command not found" if t4s_subtests() is given an invalid
     command
 
