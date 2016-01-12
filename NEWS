@@ -1,4 +1,4 @@
-v1.4, not yet released
+v1.4, released 2016-01-11
   * add a new '--exit-hook' argument to t4s_setup() to run
     user-specified code on exit (traps on EXIT, HUP, INT, and TERM are
     reserved by t4s_setup())
