@@ -41,7 +41,7 @@ https://github.com/rhansen/tap4sh
     the output is prefixed with `# ` to convert it to a TAP diagnostic
     line and then output to stdout.
 
-## Caveats
+## Caveats and Limitations
 
   * Testcases and subtests are run in a subshell, so any changes to
     variables, file descriptors, traps, etc. are lost when the
@@ -49,10 +49,12 @@ https://github.com/rhansen/tap4sh
   * All function and variable names beginning with `t4s_` are reserved
     by this library.
   * `t4s_setup()` sets traps on `HUP`, `INT`, `TERM`, and `EXIT`
-  * `t4s_testcase()` and `t4s_subtests()` open file descriptor 3 for
-    internal purposes.  Testcases and subtests should feel free to use
-    this descriptor if desired (it is closed before running testcases
-    and subtests).
+  * `t4s_testcase()` and `t4s_subtests()` close file descriptors 3 and
+    4 while running testcases and subtests because these file
+    descriptors are used for internal purposes.  Testcases and
+    subtests should feel free to use these file descriptors if
+    desired, but they cannot be used to communicate outside the call
+    to `t4s_testscase()` or `t4s_subtests()`.
   * Testcases must not write to or close file descriptor 9 as it is
     used to communicate a bailout message (see `t4s_bailout()`).
   * Standard output (stdout) is redirected in testcases and subtests,
