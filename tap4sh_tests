@@ -137,6 +137,30 @@ testcase '
 Bail out! inner bailout msg
 " 1 "inner bailout"
 
+testcase '
+    exit 0
+' "\
+Bail out! (unexpected early exit)
+" 1 "bailout from unexpected early exit"
+
+testcase '
+    kill -HUP $$
+' "\
+Bail out! (SIGHUP)
+" 1 "bailout from SIGHUP"
+
+testcase '
+    kill -INT $$
+' "\
+Bail out! (SIGINT)
+" 1 "bailout from SIGINT"
+
+testcase '
+    kill -TERM $$
+' "\
+Bail out! (SIGTERM)
+" 1 "bailout from SIGTERM"
+
 cat <<EOF >${tmpd}/subtests_script
 1..5
 # foo

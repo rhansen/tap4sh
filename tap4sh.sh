@@ -103,7 +103,11 @@ t4s_finalize() {
     if [ -n "${t4s_is_done+set}" ]; then
         t4s_pecho "1..${t4s_testnum}"
     elif [ -n "${t4s_do_bailout+set}" ]; then
-        t4s_pecho "Bail out! ${t4s_bailout_msg}"
+        if [ -n "${t4s_bailout_msg+set}" ]; then
+            t4s_pecho "Bail out! ${t4s_bailout_msg}"
+        else
+            t4s_pecho "Bail out! (${t4s_exit_reason-unexpected early exit})"
+        fi
         exit 1
     fi
     exit "${t4s_ret}"
@@ -120,8 +124,11 @@ t4s_setup() {
     unset t4s_bailout_msg
     t4s_do_bailout=true
     t4s_setup_done=true
+    unset t4s_exit_reason
     trap 't4s_finalize' EXIT
-    trap 'exit 1' HUP INT TERM
+    for t4s_setup_sig in HUP INT TERM; do
+        trap "t4s_exit_reason=SIG${t4s_setup_sig}; exit 1" "${t4s_setup_sig}"
+    done
 
     ## parse arguments
     while [ "$#" -gt 0 ]; do
