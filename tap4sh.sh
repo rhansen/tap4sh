@@ -46,6 +46,12 @@ Options:
 
   -h, --help
     Display this usage message and exit.
+
+  --exit-hook=<command>
+    If specified, the <command> will be evaluated via 'eval' in a trap
+    on EXIT, HUP, INT, and TERM before exiting.  This can be used to
+    ensure that any necessary clean-up happens no matter how the test
+    script exits.
 EOF
 }
 
@@ -108,8 +114,9 @@ t4s_finalize() {
         else
             t4s_pecho "Bail out! (${t4s_exit_reason-unexpected early exit})"
         fi
-        exit 1
+        t4s_ret=1
     fi
+    eval "${t4s_exit_hook}"
     exit "${t4s_ret}"
 }
 
@@ -124,6 +131,7 @@ t4s_setup() {
     unset t4s_bailout_msg
     t4s_do_bailout=true
     t4s_setup_done=true
+    unset t4s_exit_hook
     unset t4s_exit_reason
     trap 't4s_finalize' EXIT
     for t4s_setup_sig in HUP INT TERM; do
@@ -139,6 +147,7 @@ t4s_setup() {
                 set -- "${t4s_arg%%=*}" "${t4s_arg#*=}" "$@"
                 continue;;
             -h|--help) unset t4s_do_bailout; t4s_usage; exit 0;;
+            --exit-hook) shift; t4s_exit_hook=$1;;
             --) shift; break;;
             -*) t4s_usage_fatal "unknown option: '$1'";;
             *) break;;

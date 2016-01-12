@@ -348,4 +348,23 @@ ok 1 inner
 1..1
 " 0 "script arguments work"
 
+testcase '
+    t4s_setup --exit-hook '\''
+        t4s_log "running exit hook"
+    '\''
+' "\
+1..0
+# running exit hook
+" 0 "exit hook works (normal exit)"
+
+testcase '
+    t4s_setup --exit-hook '\''
+        t4s_log "running exit hook"
+    '\''
+    kill -TERM $$
+' "\
+Bail out! (SIGTERM)
+# running exit hook
+" 1 "exit hook works (SIGTERM)"
+
 t4s_done

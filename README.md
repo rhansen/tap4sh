@@ -48,7 +48,9 @@ https://github.com/rhansen/tap4sh
     testcase or subtest completes.
   * All function and variable names beginning with `t4s_` are reserved
     by this library.
-  * `t4s_setup()` sets traps on `HUP`, `INT`, `TERM`, and `EXIT`
+  * `t4s_setup()` sets traps on `HUP`, `INT`, `TERM`, and `EXIT`.  If
+    you need to run clean-up code on exit, you can use the
+    `--exit-hook` argument to `t4s_setup()`.
   * `t4s_testcase()` and `t4s_subtests()` close file descriptors 3 and
     4 while running testcases and subtests because these file
     descriptors are used for internal purposes.  Testcases and

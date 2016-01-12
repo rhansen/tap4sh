@@ -1,4 +1,7 @@
 v1.4, not yet released
+  * add a new '--exit-hook' argument to t4s_setup() to run
+    user-specified code on exit (traps on EXIT, HUP, INT, and TERM are
+    reserved by t4s_setup())
   * support empty bailout messages
   * if the script exits unexpectedly, log the reason for the exit in
     the bailout message ("unexpected early exit" or signal name)
