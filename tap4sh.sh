@@ -301,6 +301,25 @@ EOF
                     t4s_pecho "# ${line}"
                 done
             )
+            # it appears that a segfault in ${script} can cause some
+            # shells to exit before the return value is written to &4,
+            # causing ${ret} to be the empty string.  check for that
+            # situation here.  for good measure, also assert that
+            # ${ret} is a non-negative integer and not some garbage
+            # string.
+            [ -n "${ret}" ] && [ "${ret}" -ge 0 ] || {
+                ret=1
+                # bail out.  some notes:
+                #   * we can't tell whether a bailout message has
+                #     already been written to &9 by ${script}, so this
+                #     may append to an existing bailout message
+                #   * t4s_in_test_script is still true here, as it
+                #     should be
+                #   * the bailout command is run in a subshell to
+                #     prevent this subshell from exiting before
+                #     appending x to the bailout message
+                (t4s_bailout "unable to get testcase return status")
+            }
             # print 'x' to be removed later.  this has the effect of
             # preserving any trailing newlines in the bailout message.
             # preserving trailing newlines makes it possible to

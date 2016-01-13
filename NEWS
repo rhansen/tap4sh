@@ -1,4 +1,7 @@
 v1.5, not yet released
+  * work around a strange issue where a segfault in a testcase can
+    cause a t4s_testcase() subshell to exit before the testcase's
+    return value is recorded
 
 v1.4, released 2016-01-11
   * add a new '--exit-hook' argument to t4s_setup() to run
