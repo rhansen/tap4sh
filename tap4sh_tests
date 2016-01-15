@@ -65,17 +65,12 @@ testcase() {
             exit 1
         }
     '
-    t4s_testcase "$@" "${testname} (output)" '
-        [ -f "${tmpd}"/testcase.expected ] \
-            || t4s_bailout "missing expected output"
-        [ -f "${tmpd}"/testcase.actual ] \
-            || t4s_bailout "missing actual output"
-        cmp -s "${tmpd}"/testcase.expected "${tmpd}"/testcase.actual || {
-            t4s_log "output differs:"
-            diff -u "${tmpd}"/testcase.expected "${tmpd}"/testcase.actual
-            exit 1
-        }
-    '
+    [ -f "${tmpd}"/testcase.expected ] \
+        || t4s_bailout "missing expected output"
+    [ -f "${tmpd}"/testcase.actual ] \
+        || t4s_bailout "missing actual output"
+    t4s_testcase_diff "$@" "${testname} (output)" \
+        "${tmpd}"/testcase.expected "${tmpd}"/testcase.actual
 }
 
 t4s_testcase "t4s_esc() handles trailing newlines" '
