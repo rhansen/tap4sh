@@ -390,4 +390,28 @@ Bail out! (SIGTERM)
 # running exit hook
 " 1 "exit hook works (SIGTERM)"
 
+testcase '
+    t4s_pecho "foo" >${tmpd}/diff.expected
+    t4s_pecho "foo" >${tmpd}/diff.actual
+    t4s_testcase_diff "inner" "${tmpd}"/diff.expected "${tmpd}"/diff.actual
+' "\
+ok 1 inner
+1..1
+" 0 "t4s_testcase_diff (files match)"
+
+testcase '
+    t4s_pecho "foo" >${tmpd}/diff.expected
+    t4s_pecho "bar" >${tmpd}/diff.actual
+    t4s_testcase_diff "inner" "${tmpd}"/diff.expected "${tmpd}"/diff.actual
+' "\
+# output differs:
+# --- expected
+# +++ actual
+# @@ -1 +1 @@
+# -foo
+# +bar
+not ok 1 inner
+1..1
+" 1 "t4s_testcase_diff (files don't match)"
+
 t4s_done

@@ -1,4 +1,5 @@
 v1.5, not yet released
+  * add t4s_testcase_diff() for comparing two (text) files
   * add a helper function to discard the last N arguments
   * work around a strange issue where a segfault in a testcase can
     cause a t4s_testcase() subshell to exit before the testcase's

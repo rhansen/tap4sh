@@ -379,6 +379,26 @@ EOF
     [ "${t4s_testcase_ret}" -eq 0 ] || t4s_ret=1
 }
 
+# like t4s_testcase except rather than taking a script it takes two
+# filename arguments.  If the two files do not match, the diff is
+# logged and the test fails.
+t4s_testcase_diff() {
+    eval "t4s_testcase_diff_expected=\${$(($#-1))}"
+    eval "t4s_testcase_diff_actual=\${$#}"
+    eval "$(t4s_discard_last_args 2 "$#")"
+    t4s_testcase "$@" '
+        cmp -s \
+            "${t4s_testcase_diff_expected}" \
+            "${t4s_testcase_diff_actual}" \
+            && exit 0
+        t4s_log "output differs:"
+        diff -u "${t4s_testcase_diff_expected}" "${t4s_testcase_diff_actual}" |
+        sed -e '\''s/^--- .*/--- expected/'\'' \
+            -e '\''s/^\+\+\+ .*/+++ actual/'\''
+        exit 1
+    '
+}
+
 # internal helper
 #
 # split TAP output lines into their components

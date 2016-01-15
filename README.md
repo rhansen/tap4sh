@@ -80,6 +80,8 @@ See each function's definition for usage details.
   * `t4s_bailout()`:  Abort the test script
   * `t4s_testcase()`:  Run a script as a testcase and output the
     results in TAP format
+  * `t4s_testcase_diff()`:  Like `t4s_testcase()`, except rather than
+    running a script it compares two files
   * `t4s_give()`:  Mark the named prerequisite(s) as having being met
     so that any testcase that uses `--needs` with the named
     prerequisite won't be skipped
