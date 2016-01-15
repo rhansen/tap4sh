@@ -56,17 +56,20 @@ testcase() {
         t4s_done
     ' inner_shell "${s}" >${tmpd}/testcase.actual
     actual_ret=$?
-    t4s_testcase "$@" '
-        [ -f "${tmpd}"/testcase.expected ] \
-            || t4s_bailout "missing expected output"
-        [ -f "${tmpd}"/testcase.actual ] \
-            || t4s_bailout "missing actual output"
+    testname=$1; shift
+    t4s_testcase "$@" "${testname} (return value)" '
         [ "${actual_ret}" -eq "${expected_ret}" ] || {
             t4s_log "return value differs:"
             t4s_log "  expected: ${expected_ret}"
             t4s_log "  actual:   ${actual_ret}"
             exit 1
         }
+    '
+    t4s_testcase "$@" "${testname} (output)" '
+        [ -f "${tmpd}"/testcase.expected ] \
+            || t4s_bailout "missing expected output"
+        [ -f "${tmpd}"/testcase.actual ] \
+            || t4s_bailout "missing actual output"
         cmp -s "${tmpd}"/testcase.expected "${tmpd}"/testcase.actual || {
             t4s_log "output differs:"
             diff -u "${tmpd}"/testcase.expected "${tmpd}"/testcase.actual
