@@ -85,6 +85,26 @@ t4s_testcase "t4s_esc() handles trailing newlines" '
     [ "$(eval "printf %s\\\\n a${esc}b")" = a"${newline}"b ]
 '
 
+for args in \
+    "0 a b c" \
+    "1 a b" \
+    "2 a" \
+    "3 " \
+    "4 " \
+    ;
+do
+    n=${args%% *}
+    exp=${args#* }
+    t4s_testcase "t4s_discard_last_args $n (expect: ${exp:-<empty>})" '
+        set -- a b c
+        to_eval=$(t4s_discard_last_args "$n" "$#") \
+            || t4s_fatal "t4s_discard_last_args() failed"
+        eval "${to_eval}" \
+            || t4s_fatal "eval of t4s_discard_last_args() output failed"
+        [ "$*" = "${exp}" ] || t4s_fatal "expected \"${exp}\" got \"$*\""
+    '
+done
+
 testcase '
     t4s_testcase inner true
 ' "\

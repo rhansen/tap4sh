@@ -98,6 +98,8 @@ See each function's definition for usage details.
   * `t4s_pecho()`:  Portable echo
   * `t4s_esc()`:  Wrap each argument suitable for `eval`
   * `t4s_re_match()`:  Check if a string matches a regular expression
+  * `t4s_discard_last_args()`:  Discard the last N positional
+    arguments
 
 ## Example Test Script
 

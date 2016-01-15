@@ -99,6 +99,19 @@ t4s_re_match() {
     expr "${t4s_re_match_str}" : "${t4s_re_match_re}" >/dev/null
 }
 
+# helper to clear the last N arguments.  to use, run:
+#     eval "$(t4s_discard_last_args $N "$#")"
+# where $N is the number of arguments to remove
+t4s_discard_last_args() {
+    t4s_discard_last_args_i=1
+    printf %s "set --"
+    while [ "${t4s_discard_last_args_i}" -le "$(($2-$1))" ]; do
+        printf %s " \"\${${t4s_discard_last_args_i}}\""
+        t4s_discard_last_args_i=$((t4s_discard_last_args_i+1))
+    done
+    printf \\n
+}
+
 ## setup and cleanup
 
 # internal helper
