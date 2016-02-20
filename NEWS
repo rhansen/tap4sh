@@ -1,4 +1,6 @@
 v1.5, not yet released
+  * work around a NetBSD shell bug:
+    http://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=50827
   * add t4s_testcase_diff() for comparing two (text) files
   * add a helper function to discard the last N arguments
   * work around a strange issue where a segfault in a testcase can
