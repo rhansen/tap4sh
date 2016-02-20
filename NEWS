@@ -1,4 +1,4 @@
-v1.5, not yet released
+v1.5, released 2016-02-20
   * work around a NetBSD shell bug:
     http://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=50827
   * add t4s_testcase_diff() for comparing two (text) files
