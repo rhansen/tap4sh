@@ -35,7 +35,7 @@
 # https://github.com/rhansen/tap4sh
 
 t4s_version_major=1
-t4s_version_minor=5
+t4s_version_minor=6
 t4s_version=${t4s_version_major}.${t4s_version_minor}
 
 t4s_usage() {
