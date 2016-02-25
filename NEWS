@@ -1,4 +1,6 @@
 v1.6, not yet released
+  * silence an "unused label 'skip'" warning on some sed
+    implementations
   * define and use t4s_unset() to work around another NetBSD shell
     bug:  http://gnats.netbsd.org/49595
 

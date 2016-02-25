@@ -464,6 +464,7 @@ t rmnum2
 b error
 :rmnum2
 h
+b skip
 
 # extract the skip message
 :skip
